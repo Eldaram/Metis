@@ -9,6 +9,13 @@ BE CAREFUL ABOUT LAUNCHING :
 	Metis will ask you the secret token after you had launch it
 	You should use launcher.py to launch her. It prevents for some internal glitches...
 	Metis isn't perfectly stable for the moment
+	Think to fill EVRY informations in Data.
 
 Module in Metis :
-	Nothing for the moment...
+	Send text message when a player comes in
+	Send text message when a player is leaving
+	Do a cool dice bot !
+
+Thanks to discord.py ---> https://github.com/Rapptz/discord.py
+
+(Go check it to have more informations and please Star their incredible work !)
