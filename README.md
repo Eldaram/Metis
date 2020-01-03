@@ -16,6 +16,8 @@ Module in Metis :
 	Send text message when a player is leaving
 	Do a cool dice bot !
 
+You can activate or disable functionalities in Data. (check out boleans)
+
 Thanks to discord.py ---> https://github.com/Rapptz/discord.py
 
 (Go check it to have more informations and please Star their incredible work !)

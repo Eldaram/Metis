@@ -16,11 +16,12 @@ async def on_ready():
     global adminOnly
     adminOnly = guild.get_channel(Data.admin_channel)
 
-    await adminOnly.send("Bonjour ! Je viens de me lancer.")
+    if Data.launch_message :
+        await adminOnly.send("Bonjour ! Je viens de me lancer.")
 
 @client.event #Define call from channels
 async def on_message(text):
-    if text.content[0] == "!":
+    if text.content[0] == "!" and Data.dice_module:
         mess = text.content + " "
         if str.find(text.content, "roll") == 1: #Function for dices
             mess = mess.replace(' ', '')
@@ -60,21 +61,23 @@ async def on_message(text):
             except :
                 await text.channel.send("La syntaxe n'est pas correcte... Il faut l'écrire \"!roll 1d20 +3\" par exemple.")
 
-    elif text.channel.type == discord.ChannelType.private and not text.author.bot: #function for "send to amdin"
+    elif Data.to_admin_message and text.channel.type == discord.ChannelType.private and not text.author.bot: #function for "send to amdin"
         textToSend = text.author.name + ' a dit : "' + text.content + '"'
         await adminOnly.send(textToSend)
         await text.channel.send("C'est transmit aux admins. Ils te répondront sous peu ne t'en fait pas ! :wink:")
 
-@client.event #define member join
-async def on_member_join(joueur):
-    await gen_channel.send("**Regardez @everyone ! Un nouveau compagnon est arrivée ! Bienvenue à toi "+joueur.mention+" !**")
-    if joueur.dm_channel == None:
-    	await joueur.create_dm()
-    await joueur.dm_channel.send("**Bienvenue a toi sur Roliste Universe !** N'hésite pas a aller voir les admins pour leurs demander de l'aide et sinon va voir sur https://roliste-universe.fr/presentation.php#serveur pour avoir les mondes qui sont sur le serveur ! Bonne lecture !")
 
-@client.event #define member leave
-async def on_member_remove(joueur):
-    await gen_channel.send("**"+joueur.display_name+" est partie ! Que son retours dans le monde triste de la réalité soit paisible...**")    
+if Data.guild_join_leave :
+    @client.event #define member join
+    async def on_member_join(joueur):
+        await gen_channel.send("**Regardez @everyone ! Un nouveau compagnon est arrivée ! Bienvenue à toi "+joueur.mention+" !**")
+        if joueur.dm_channel == None:
+        	await joueur.create_dm()
+        await joueur.dm_channel.send("**Bienvenue a toi sur Roliste Universe !** N'hésite pas a aller voir les admins pour leurs demander de l'aide et sinon va voir sur https://roliste-universe.fr/presentation.php#serveur pour avoir les mondes qui sont sur le serveur ! Bonne lecture !")
+
+    @client.event #define member leave
+    async def on_member_remove(joueur):
+        await gen_channel.send("**"+joueur.display_name+" est partie ! Que son retours dans le monde triste de la réalité soit paisible...**")    
 
 
 print("The bot is ready ! \nConnect to discord...")
