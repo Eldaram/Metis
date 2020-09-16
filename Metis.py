@@ -1,26 +1,54 @@
 import discord
 from random import *
 import Data
+import functions_cores
 
 client = discord.Client() #Create the client link
 
 @client.event #Everything for begining
 async def on_ready():
 
+    #guilds
     global guild
     guild = client.get_guild(Data.main_guild)
     
+    #channels
     global gen_channel
     gen_channel = guild.get_channel(Data.general_channel)
     
     global adminOnly
     adminOnly = guild.get_channel(Data.admin_channel)
 
+    global parents_channel
+    parents_channel = guild.get_channel(Data.parents_channel)
+
+    global new_channel
+    new_channel = [0,0,0]
+    new_channel[0] = guild.get_channel(Data.new_channel[0])
+    new_channel[1] = guild.get_channel(Data.new_channel[1])
+    new_channel[2] = guild.get_channel(Data.new_channel[2])
+
+    #roles
+    global member
+    member = guild.get_role(Data.membre)
+
+    global parents
+    parents = guild.get_role(Data.parents)
+
+    global new_role
+    new_role = [0,0,0]
+    new_role[0] = guild.get_role(Data.new_role[0])
+    new_role[1] = guild.get_role(Data.new_role[1])
+    new_role[2] = guild.get_role(Data.new_role[2])
+
     if Data.launch_message :
         await adminOnly.send("Bonjour ! Je viens de me lancer.")
 
 @client.event #Define call from channels
 async def on_message(text):
+    #add exps 5*(n**2)+50*n+100
+
+    #others fonctions
     if text.content[0] == "!" and Data.dice_module:
         mess = text.content + " "
         if str.find(text.content, "roll") == 1: #Function for dices
@@ -70,14 +98,28 @@ async def on_message(text):
 if Data.guild_join_leave :
     @client.event #define member join
     async def on_member_join(joueur):
-        await gen_channel.send("**Regardez @everyone ! Un nouveau compagnon est arrivée ! Bienvenue à toi "+joueur.mention+" !**")
+        num = functions_cores.read_last()
+        await joueur.add_roles(new_role[num])
+        await new_channel[num].send("**Regardez @everyone ! " + joueur.mention + "viens tout juste d'arriver ! Bienvenue parmis nous !**")
+        await parents_channel.send("**Regardez un nouveau compagnon est arrivée sur le salon " + str(num+1) + " ! Il s'appelle "+joueur.display_name+" ! N'oubliez pas de lui demander qui l'a inviter sur le serveur !**")
         if joueur.dm_channel == None:
         	await joueur.create_dm()
-        await joueur.dm_channel.send("**Bienvenue a toi sur Roliste Universe !** N'hésite pas a aller voir les admins pour leurs demander de l'aide et sinon va voir sur https://roliste-universe.fr/presentation.php#serveur pour avoir les mondes qui sont sur le serveur ! Bonne lecture !")
+        await joueur.dm_channel.send("**Bienvenue a toi sur Roliste Universe !** N'hésite pas a aller voir les admins et les parents pour leurs demander de l'aide et sinon va voir sur https://roliste-universe.fr/presentation.php#serveur pour avoir les mondes qui sont sur le serveur ! Bonne lecture !")
+
+    @client.event
+    async def on_member_update(before, after):
+        if before.guild == guild:
+            if not functions_cores.in_list(before.roles, member):
+                if functions_cores.in_list(after.roles , member):
+                    await gen_channel.send("**Regardez @everyone ! Un nouveau compagnon est arrivée ! Bienvenue à toi" + after.mention + " !**")
+
 
     @client.event #define member leave
     async def on_member_remove(joueur):
-        await gen_channel.send("**"+joueur.display_name+" est partie ! Que son retours dans le monde triste de la réalité soit paisible...**")    
+        if not functions_cores.in_list(joueur.roles , member):
+            await parents_channel.send("**"+joueur.display_name+" est partie ! Il n'a pas eu l'occasion de devenir membre...**")
+        else :
+            await gen_channel.send("**"+joueur.display_name+" est partie ! Que son retours dans le monde triste de la réalité soit paisible...**")    
 
 
 print("The bot is ready ! \nConnect to discord...")

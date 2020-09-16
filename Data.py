@@ -1,9 +1,21 @@
-secret_token    = ""
-main_guild      = 0
-general_channel = 0
-admin_channel   = 0
+secret_token =
 
-launch_message 	 = False
-dice_module    	 = False
-guild_join_leave = False
-to_admin_message = False
+#GUILDS
+main_guild = 
+
+#CHANNELS
+general_channel  = 
+admin_channel    = 
+parents_channel  = 
+new_channel      = [, , ]
+
+#ROLES
+membre   = 
+parents  = 
+new_role = [, , ]
+
+#MODULES
+launch_message 	 = True
+dice_module    	 = True
+guild_join_leave = True
+to_admin_message = True
