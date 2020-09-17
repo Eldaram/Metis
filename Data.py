@@ -19,3 +19,4 @@ launch_message 	 = True
 dice_module    	 = True
 guild_join_leave = True
 to_admin_message = True
+webhook_profile  = True

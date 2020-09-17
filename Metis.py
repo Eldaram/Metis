@@ -47,6 +47,39 @@ async def on_ready():
 @client.event #Define call from channels
 async def on_message(text):
     #add exps 5*(n**2)+50*n+100
+    if str.find(text.content.lower(), "!addpnj ") == 0 and Data.webhook_profile: #create a webhook
+        image = text.attachments
+        mess  = text.content
+        mess  = mess.replace("!addpnj ", '')
+        if len(image)==1 and (str.find(image[0].filename, ".png") or str.find(image[0].filename, ".jpg") or str.find(image[0].filename, ".jpeg")):
+            image = await image[0].read()
+        else:
+            image = None
+        if mess != "":
+            reason_by = "Ask by "+text.author.display_name
+            await text.channel.create_webhook(name=mess, avatar=image, reason=reason_by)
+        else :
+            await text.channel.send("(Oups, je n'ai pas pus créer le pnj !)")
+        await text.delete(delay=None)
+
+    if str.find(text.content.lower(), "!talkas ") == 0 and Data.webhook_profile:
+        text.channel.send("(Cette fonction n'est pas disponible encore !)")
+
+    if str.find(text.content.lower(), "!pnjhere") == 0 and Data.webhook_profile:
+        webhooks = await text.channel.webhooks()
+        if text.author.dm_channel == None:
+            await text.author.create_dm()
+        if len(webhooks) > 0:
+            texte = "```Les PnJs de ce channel sont :"
+            for i in range(len(webhooks)):
+                texte += "\n  - " + webhooks[i].name
+            texte += "```"
+        else:
+            texte : "Il n'y a pas de PnJs dans ce salon"
+        await text.author.dm_channel.send(texte)
+        await text.delete(delay=None)
+
+
 
     #others fonctions
     if text.content[0] == "!" and Data.dice_module:
