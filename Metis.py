@@ -1,5 +1,9 @@
 import discord
 from random import *
+import json
+from urllib import request
+from urllib.error import HTTPError
+
 import Data
 import functions_cores
 
@@ -51,19 +55,40 @@ async def on_message(text):
         image = text.attachments
         mess  = text.content
         mess  = mess.replace("!addpnj ", '')
-        if len(image)==1 and (str.find(image[0].filename, ".png") or str.find(image[0].filename, ".jpg") or str.find(image[0].filename, ".jpeg")):
-            image = await image[0].read()
-        else:
-            image = None
-        if mess != "":
-            reason_by = "Ask by "+text.author.display_name
-            await text.channel.create_webhook(name=mess, avatar=image, reason=reason_by)
+        if functions_cores.in_list(await text.channel.webhooks(), mess, f=(lambda x:x.name)):
+            await text.channel.send("(Oups, un·e PnJ porte déjà ce nom !)")
         else :
-            await text.channel.send("(Oups, je n'ai pas pus créer le pnj !)")
+            if len(image)==1 and (str.find(image[0].filename, ".png") or str.find(image[0].filename, ".jpg") or str.find(image[0].filename, ".jpeg")):
+                image = await image[0].read()
+            else:
+                image = None
+            if mess != "":
+                reason_by = "Ask by "+text.author.display_name
+                await text.channel.create_webhook(name=mess, avatar=image, reason=reason_by)
+            else :
+                await text.channel.send("(Oups, je n'ai pas pus créer le·la pnj !)")
         await text.delete(delay=None)
 
-    if str.find(text.content.lower(), "!talkas ") == 0 and Data.webhook_profile:
-        text.channel.send("(Cette fonction n'est pas disponible encore !)")
+    if str.find(text.content.lower(), '!talkas ') == 0 and Data.webhook_profile:
+        mess  = text.content
+        mess  = mess.replace("!talkas ", '')
+        mess  = functions_cores.suppr_all_char(mess," ")
+        if mess[0] == '"':
+            mess = mess.replace('"','',1)
+            mess  = mess.split('"',1)
+            if len(mess) == 2:
+                webhooks = await text.channel.webhooks()
+                place = functions_cores.in_list(webhooks, mess[0], f=(lambda x:x.name),place=True)
+                if place != -1:
+                    if not functions_cores.webhook_request(webhooks[place].url,mess[1]) :
+                        await text.channel.send("(Oups, une erreur inconnue s'est produite ! Parle en tout de suite aux admins qu'ils aillent voire ce qui ne va pas !)")
+                else:
+                    await text.channel.send("(Aucun·e PnJ porte ce nom sur ce salon)")
+            else:
+                await text.channel.send("(Oups, la syntaxe est mauvaise)")
+        else:
+            await text.channel.send("(Oups, la syntaxe est mauvaise)")
+        await text.delete(delay=None)
 
     if str.find(text.content.lower(), "!pnjhere") == 0 and Data.webhook_profile:
         webhooks = await text.channel.webhooks()
@@ -134,7 +159,7 @@ if Data.guild_join_leave :
         num = functions_cores.read_last()
         await joueur.add_roles(new_role[num])
         await new_channel[num].send("**Regardez @everyone ! " + joueur.mention + "viens tout juste d'arriver ! Bienvenue parmis nous !**")
-        await parents_channel.send("**Regardez un nouveau compagnon est arrivée sur le salon " + str(num+1) + " ! Il s'appelle "+joueur.display_name+" ! N'oubliez pas de lui demander qui l'a inviter sur le serveur !**")
+        await parents_channel.send("**Regardez un·e nouveau·elle compagnon·ne est arrivé·e sur le salon " + str(num+1) + " ! Il·Elle s'appelle "+joueur.display_name+" ! N'oubliez pas de lui demander qui l'a inviter sur le serveur !**")
         if joueur.dm_channel == None:
         	await joueur.create_dm()
         await joueur.dm_channel.send("**Bienvenue a toi sur Roliste Universe !** N'hésite pas a aller voir les admins et les parents pour leurs demander de l'aide et sinon va voir sur https://roliste-universe.fr/presentation.php#serveur pour avoir les mondes qui sont sur le serveur ! Bonne lecture !")
@@ -144,15 +169,15 @@ if Data.guild_join_leave :
         if before.guild == guild:
             if not functions_cores.in_list(before.roles, member):
                 if functions_cores.in_list(after.roles , member):
-                    await gen_channel.send("**Regardez @everyone ! Un nouveau compagnon est arrivée ! Bienvenue à toi" + after.mention + " !**")
+                    await gen_channel.send("**Regardez @everyone ! Un·e nouveau·elle compagnon·ne est arrivé·e ! Bienvenue à toi " + after.mention + " !**")
 
 
     @client.event #define member leave
     async def on_member_remove(joueur):
         if not functions_cores.in_list(joueur.roles , member):
-            await parents_channel.send("**"+joueur.display_name+" est partie ! Il n'a pas eu l'occasion de devenir membre...**")
+            await parents_channel.send("**"+joueur.display_name+" est parti·e ! Il·Elle n'a pas eu l'occasion de devenir membre...**")
         else :
-            await gen_channel.send("**"+joueur.display_name+" est partie ! Que son retours dans le monde triste de la réalité soit paisible...**")    
+            await gen_channel.send("**"+joueur.display_name+" est parti·e ! Que son retours dans le monde triste de la réalité soit paisible...**")    
 
 
 print("The bot is ready ! \nConnect to discord...")
