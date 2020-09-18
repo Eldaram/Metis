@@ -26,3 +26,4 @@ dice_module    	 = True
 guild_join_leave = True
 to_admin_message = True
 webhook_profile  = True
+XPs_modules      = True

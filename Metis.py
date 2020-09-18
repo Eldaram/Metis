@@ -2,6 +2,7 @@ import asyncio
 import time
 import discord
 from random import *
+import pickle
 import json
 from urllib import request
 from urllib.error import HTTPError
@@ -48,10 +49,14 @@ async def on_ready():
 
     if Data.launch_message :
         await adminOnly.send("Bonjour ! Je viens de me lancer.")
+    if Data.XPs_modules:
+        pass
 
 @client.event #Define call from channels
 async def on_message(text):
     #add exps 5*(n**2)+50*n+100
+    if Data.XPs_modules:
+        pass
     if Data.webhook_profile and text.channel.type != discord.ChannelType.private and text.channel.category_id != Data.admin_category and text.channel.category_id != Data.new_category and text.channel.category_id != Data.HRP_category and text.channel.category_id != Data.DMAS_category : #fonctions liee aux webhooks
         if str.find(text.content.lower(), "!addpnj ") == 0: #create a webhook
             image = text.attachments

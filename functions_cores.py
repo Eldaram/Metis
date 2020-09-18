@@ -1,6 +1,7 @@
 import json
 from urllib import request
 from urllib.error import HTTPError
+from random import *
 
 def Test_token(secretToken):
  	return len(secretToken) == 59
@@ -86,3 +87,44 @@ def webhook_request(url, content):
 	    print(e.hdrs)
 	    print(e.file.read())
 	    return False
+
+"""
+epxs_supp permet d'ajouter de l'xp dans une bibliothèque
+library représente les xps et le niveau des joueurs liée à une clé qui est leurs ID unique discord
+key est l'ID spécifique du membre a qui on veut ajouter de l'XP
+
+la valeur de sortie est library modifié
+
+library = {IDJOUEUR : (XP,niveau, nombre de message, temps en vocal)}
+"""
+def epxs_supp(library,key):
+	exist = False
+	for i in library:
+		if key == i:
+			exist = True
+	if not exist:
+		library[key] = (0,0,0,0)
+	library[key] = player_win_xp(library[key])
+	return library
+
+"""
+Cette fonction fait augmente les xps avec un nombre aléatoire compris entre 15 et 25
+Si les XPs totaux dépssent 5*(n*n)+50*n+100 avec n le niveau actuel, alors le niveau monte de 1 et on retirel'ancien total à xp
+
+a = (level, xp, nmbmess, vochours) <- (int,int,int,int)
+(level, xp, nmbmess, vochours) -> (int,int,int,int)
+"""
+def player_win_xp(a):
+	(level, xp, nmbmess, vochours) = a
+	xpsupp = randint(15,25)
+	nmbmess += 1
+	xp += xpsupp
+	if xp >= 5*(level*level)+50*level+100:
+		xp -= 5*(level*level)+50*level+100
+		level += 1
+	return (level, xp, nmbmess, vochours)
+
+levels = {}
+for i in range(52800):
+	levels = epxs_supp(levels,"Dragan")
+	print(levels["Dragan"])
