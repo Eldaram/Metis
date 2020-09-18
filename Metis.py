@@ -11,7 +11,6 @@ client = discord.Client() #Create the client link
 
 @client.event #Everything for begining
 async def on_ready():
-
     #guilds
     global guild
     guild = client.get_guild(Data.main_guild)
@@ -51,62 +50,59 @@ async def on_ready():
 @client.event #Define call from channels
 async def on_message(text):
     #add exps 5*(n**2)+50*n+100
-    if str.find(text.content.lower(), "!addpnj ") == 0 and Data.webhook_profile: #create a webhook
-        image = text.attachments
-        mess  = text.content
-        mess  = mess.replace("!addpnj ", '')
-        if functions_cores.in_list(await text.channel.webhooks(), mess, f=(lambda x:x.name)):
-            await text.channel.send("(Oups, un·e PnJ porte déjà ce nom !)")
-        else :
-            if len(image)==1 and (str.find(image[0].filename, ".png") or str.find(image[0].filename, ".jpg") or str.find(image[0].filename, ".jpeg")):
-                image = await image[0].read()
-            else:
-                image = None
-            if mess != "":
-                reason_by = "Ask by "+text.author.display_name
-                await text.channel.create_webhook(name=mess, avatar=image, reason=reason_by)
+    if Data.webhook_profile and text.category_id != Data.admin_category and text.category_id != new_category and text.category_id != HRP_category and text.category_id != DMAS_category : #fonctions liee aux webhooks
+        if str.find(text.content.lower(), "!addpnj ") == 0: #create a webhook
+            image = text.attachments
+            mess  = text.content
+            mess  = mess.replace("!addpnj ", '')
+            if functions_cores.in_list(await text.channel.webhooks(), mess, f=(lambda x:x.name)):
+                await text.channel.send("(Oups, un·e PnJ porte déjà ce nom !)")
             else :
-                await text.channel.send("(Oups, je n'ai pas pus créer le·la pnj !)")
-        await text.delete(delay=None)
-
-    if str.find(text.content.lower(), '!talkas ') == 0 and Data.webhook_profile:
-        mess  = text.content
-        mess  = mess.replace("!talkas ", '')
-        mess  = functions_cores.suppr_all_char(mess," ")
-        if mess[0] == '"':
-            mess = mess.replace('"','',1)
-            mess  = mess.split('"',1)
-            if len(mess) == 2:
-                webhooks = await text.channel.webhooks()
-                place = functions_cores.in_list(webhooks, mess[0], f=(lambda x:x.name),place=True)
-                if place != -1:
-                    if not functions_cores.webhook_request(webhooks[place].url,mess[1]) :
-                        await text.channel.send("(Oups, une erreur inconnue s'est produite ! Parle en tout de suite aux admins qu'ils aillent voire ce qui ne va pas !)")
+                if len(image)==1 and (str.find(image[0].filename, ".png") or str.find(image[0].filename, ".jpg") or str.find(image[0].filename, ".jpeg")):
+                    image = await image[0].read()
                 else:
-                    await text.channel.send("(Aucun·e PnJ porte ce nom sur ce salon)")
+                    image = None
+                if mess != "":
+                    reason_by = "Ask by "+text.author.display_name
+                    await text.channel.create_webhook(name=mess, avatar=image, reason=reason_by)
+                else :
+                    await text.channel.send("(Oups, je n'ai pas pus créer le·la pnj !)")
+            await text.delete(delay=None)
+
+        if str.find(text.content.lower(), '!talkas ') == 0:
+            mess  = text.content
+            mess  = mess.replace("!talkas ", '')
+            if mess[0] == '"':
+                mess = mess.replace('"','',1)
+                mess  = mess.split('" ',1)
+                if len(mess) == 2:
+                    webhooks = await text.channel.webhooks()
+                    place = functions_cores.in_list(webhooks, mess[0], f=(lambda x:x.name),place=True)
+                    if place != -1:
+                        if not functions_cores.webhook_request(webhooks[place].url,mess[1]) :
+                            await text.channel.send("(Oups, une erreur inconnue s'est produite ! Parle en tout de suite aux admins qu'ils aillent voire ce qui ne va pas !)")
+                    else:
+                        await text.channel.send("(Aucun·e PnJ porte ce nom sur ce salon)")
+                else:
+                    await text.channel.send("(Oups, la syntaxe est mauvaise)")
             else:
                 await text.channel.send("(Oups, la syntaxe est mauvaise)")
-        else:
-            await text.channel.send("(Oups, la syntaxe est mauvaise)")
-        await text.delete(delay=None)
+            await text.delete(delay=None)
 
-    if str.find(text.content.lower(), "!pnjhere") == 0 and Data.webhook_profile:
-        webhooks = await text.channel.webhooks()
-        if text.author.dm_channel == None:
-            await text.author.create_dm()
-        if len(webhooks) > 0:
-            texte = "```Les PnJs de ce channel sont :"
-            for i in range(len(webhooks)):
-                texte += "\n  - " + webhooks[i].name
-            texte += "```"
-        else:
-            texte : "Il n'y a pas de PnJs dans ce salon"
-        await text.author.dm_channel.send(texte)
-        await text.delete(delay=None)
-
-
-
-    #others fonctions
+        if str.find(text.content.lower(), "!pnjhere") == 0:
+            webhooks = await text.channel.webhooks()
+            if text.author.dm_channel == None:
+                await text.author.create_dm()
+            if len(webhooks) > 0:
+                texte = "```Les PnJs de ce channel sont :"
+                for i in range(len(webhooks)):
+                    texte += "\n  - " + webhooks[i].name
+                texte += "```"
+            else:
+                texte : "Il n'y a pas de PnJs dans ce salon"
+            await text.author.dm_channel.send(texte)
+            await text.delete(delay=None)
+    #DICE FUNCIONS
     if text.content[0] == "!" and Data.dice_module:
         mess = text.content + " "
         if str.find(text.content, "roll") == 1: #Function for dices

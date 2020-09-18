@@ -1,4 +1,4 @@
-secret_token =
+secret_token = 
 
 #GUILDS
 main_guild = 
@@ -8,6 +8,12 @@ general_channel  =
 admin_channel    = 
 parents_channel  = 
 new_channel      = [, , ]
+
+#CATEGORY
+admin_category = 
+new_category   = 
+HRP_category   = 
+DMAS_category  = 
 
 #ROLES
 membre   = 
