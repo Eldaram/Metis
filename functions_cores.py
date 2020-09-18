@@ -124,7 +124,19 @@ def player_win_xp(a):
 		level += 1
 	return (level, xp, nmbmess, vochours)
 
-levels = {}
-for i in range(52800):
-	levels = epxs_supp(levels,"Dragan")
-	print(levels["Dragan"])
+"""
+Fonction qui sauvegarde les niveaux
+"""
+def save_levels(dictionary):
+	with open("savefile.txt","wb") as fichier:
+		mon_pickler = pickle.Pickler(fichier)
+		mon_pickler.dump(dictionary)
+
+"""
+Fonction qui réccupère et retourne les niveaux qui se trouvent dans le fichier levels
+"""
+def open_levels():
+	with open("savefile.txt","rb") as fichier:
+		mon_depickler = pickle.Unpickler(fichier)
+		dictionary = mon_depickler.load()
+	return dictionary
