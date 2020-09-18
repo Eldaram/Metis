@@ -1,3 +1,5 @@
+import asyncio
+import time
 import discord
 from random import *
 import json
