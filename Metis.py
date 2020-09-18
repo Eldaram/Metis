@@ -50,7 +50,7 @@ async def on_ready():
 @client.event #Define call from channels
 async def on_message(text):
     #add exps 5*(n**2)+50*n+100
-    if Data.webhook_profile and text.category_id != Data.admin_category and text.category_id != new_category and text.category_id != HRP_category and text.category_id != DMAS_category : #fonctions liee aux webhooks
+    if Data.webhook_profile and text.channel.type != discord.ChannelType.private and text.channel.category_id != Data.admin_category and text.channel.category_id != Data.new_category and text.channel.category_id != Data.HRP_category and text.channel.category_id != Data.DMAS_category : #fonctions liee aux webhooks
         if str.find(text.content.lower(), "!addpnj ") == 0: #create a webhook
             image = text.attachments
             mess  = text.content
@@ -99,7 +99,7 @@ async def on_message(text):
                     texte += "\n  - " + webhooks[i].name
                 texte += "```"
             else:
-                texte : "Il n'y a pas de PnJs dans ce salon"
+                texte = "Il n'y a pas de PnJs dans ce salon"
             await text.author.dm_channel.send(texte)
             await text.delete(delay=None)
     #DICE FUNCIONS
