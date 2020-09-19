@@ -50,13 +50,27 @@ async def on_ready():
     if Data.launch_message :
         await adminOnly.send("Bonjour ! Je viens de me lancer.")
     if Data.XPs_modules:
-        pass
+        global levels
+        levels = functions_cores.open_levels()
+        while True:
+            await asyncio.sleep(60)
+            voice_chan = guild.voice_channels
+            for i in range(len(voice_chan)):
+                if voice_chan[i].id != Data.afk and len(voice_chan[i].members) >= 2 :
+                    for y in range(len(voice_chan[i].members)):
+                        (levels,up) = functions_cores.epxs_supp(levels,voice_chan[i].members[i].id,vocal=True)
+                        if up:
+                            pass
+            functions_cores.save_levels(levels)
+
 
 @client.event #Define call from channels
 async def on_message(text):
     #add exps 5*(n**2)+50*n+100
-    if Data.XPs_modules:
-        pass
+    if Data.XPs_modules and text.channel.type != discord.ChannelType.private and not functions_cores.in_list(Data.not_xp_channels, text.channel.id) :
+        (levels,up) = functions_cores.epxs_supp(levels,text.author.id)
+        if up:
+            pass
     if Data.webhook_profile and text.channel.type != discord.ChannelType.private and text.channel.category_id != Data.admin_category and text.channel.category_id != Data.new_category and text.channel.category_id != Data.HRP_category and text.channel.category_id != Data.DMAS_category : #fonctions liee aux webhooks
         if str.find(text.content.lower(), "!addpnj ") == 0: #create a webhook
             image = text.attachments

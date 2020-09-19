@@ -8,6 +8,10 @@ general_channel  =
 admin_channel    = 
 parents_channel  = 
 new_channel      = [, , ]
+not_xp_channels  = []
+
+#VOICES CHANNELS
+afk = 
 
 #CATEGORY
 admin_category = 

@@ -97,15 +97,15 @@ la valeur de sortie est library modifié
 
 library = {IDJOUEUR : (XP,niveau, nombre de message, temps en vocal)}
 """
-def epxs_supp(library,key):
+def epxs_supp(library,key,vocal=False):
 	exist = False
 	for i in library:
 		if key == i:
 			exist = True
 	if not exist:
 		library[key] = (0,0,0,0)
-	library[key] = player_win_xp(library[key])
-	return library
+	(library[key],up) = player_win_xp(library[key],vocal)
+	return (library,up)
 
 """
 Cette fonction fait augmente les xps avec un nombre aléatoire compris entre 15 et 25
@@ -114,15 +114,21 @@ Si les XPs totaux dépssent 5*(n*n)+50*n+100 avec n le niveau actuel, alors le n
 a = (level, xp, nmbmess, vochours) <- (int,int,int,int)
 (level, xp, nmbmess, vochours) -> (int,int,int,int)
 """
-def player_win_xp(a):
+def player_win_xp(a, vocal):
 	(level, xp, nmbmess, vochours) = a
-	xpsupp = randint(15,25)
-	nmbmess += 1
+	up = False
+	if vocal:
+		xpsupp = 10
+		vochours += 1
+	else :
+		xpsupp = randint(15,25)
+		nmbmess += 1
 	xp += xpsupp
 	if xp >= 5*(level*level)+50*level+100:
 		xp -= 5*(level*level)+50*level+100
 		level += 1
-	return (level, xp, nmbmess, vochours)
+		up = True
+	return ((level, xp, nmbmess, vochours),up)
 
 """
 Fonction qui sauvegarde les niveaux
