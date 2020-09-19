@@ -61,10 +61,11 @@ async def on_ready():
                         (levels,up) = functions_cores.epxs_supp(levels,voice_chan[i].members[y].id,vocal=True)
                         if up:
                             if functions_cores.in_list(voice_chan[i].members[y].roles , member) :
-                                pass
+                                await gen_channel.send("**Bravo  " + voice_chan[i].members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + levels[voice_chan[i].members[y].id][0] + " !**")
                             else :
-                                pass
+                                await new_channel[where_send_xp_mess(voice_chan[i].members[y],new_role)].send("**Bravo  " + voice_chan[i].members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + levels[voice_chan[i].members[y].id][0] + " !**")
             functions_cores.save_levels(levels)
+            
 
 
 @client.event #Define call from channels
@@ -73,7 +74,10 @@ async def on_message(text):
     if Data.XPs_modules and text.channel.type != discord.ChannelType.private and text.content[0] != "!" and not functions_cores.in_list(Data.not_xp_channels, text.channel.id) :
         (levels,up) = functions_cores.epxs_supp(levels,text.author.id)
         if up:
-            pass
+            if functions_cores.in_list(text.author.roles , member) :
+                await gen_channel.send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + levels[text.author.id][0] + " !**")
+            else :
+                await new_channel[where_send_xp_mess(text.author,new_role)].send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + levels[text.author.id][0] + " !**")
     if Data.webhook_profile and text.channel.type != discord.ChannelType.private and text.channel.category_id != Data.admin_category and text.channel.category_id != Data.new_category and text.channel.category_id != Data.HRP_category and text.channel.category_id != Data.DMAS_category : #fonctions liee aux webhooks
         if str.find(text.content.lower(), "!addpnj ") == 0: #create a webhook
             image = text.attachments
