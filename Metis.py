@@ -9,7 +9,6 @@ from urllib.error import HTTPError
 
 import Data
 import functions_cores
-import discord_functions
 
 client = discord.Client() #Create the client link
 
@@ -57,18 +56,21 @@ async def on_ready():
             await asyncio.sleep(60)
             voice_chan = guild.voice_channels
             for i in range(len(voice_chan)):
-                if voice_chan[i].id != Data.afk and len(voice_chan[i].members) >= 2 :
+                if voice_chan[i].id != Data.afk and len(voice_chan[i].members) > 1 : #ne pas oublier de ne pas compter les bots
                     for y in range(len(voice_chan[i].members)):
-                        (levels,up) = functions_cores.epxs_supp(levels,voice_chan[i].members[i].id,vocal=True)
+                        (levels,up) = functions_cores.epxs_supp(levels,voice_chan[i].members[y].id,vocal=True)
                         if up:
-                            pass
+                            if functions_cores.in_list(voice_chan[i].members[y].roles , member) :
+                                pass
+                            else :
+                                pass
             functions_cores.save_levels(levels)
 
 
 @client.event #Define call from channels
 async def on_message(text):
     #add exps 5*(n**2)+50*n+100
-    if Data.XPs_modules and text.channel.type != discord.ChannelType.private and not functions_cores.in_list(Data.not_xp_channels, text.channel.id) :
+    if Data.XPs_modules and text.channel.type != discord.ChannelType.private and text.content[0] != "!" and not functions_cores.in_list(Data.not_xp_channels, text.channel.id) :
         (levels,up) = functions_cores.epxs_supp(levels,text.author.id)
         if up:
             pass

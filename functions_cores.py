@@ -146,3 +146,13 @@ def open_levels():
 		mon_depickler = pickle.Unpickler(fichier)
 		dictionary = mon_depickler.load()
 	return dictionary
+
+"""
+Fonction utiliser pour savoir où envoyer un message système si un utilisateur n'es pas membre mais qu'il a monté de niveau
+"""
+def where_send_xp_mess(user,lisRole) :
+	res = -1
+	for i in range(len(lisRole)):
+		if functions_cores.in_list(user.role, lisRole[i]):
+			res = i
+	return res
