@@ -156,3 +156,18 @@ def where_send_xp_mess(user,lisRole) :
 		if functions_cores.in_list(user.role, lisRole[i]):
 			res = i
 	return res
+
+"""
+Fonction qui renvoie une barre de chargement sous forme de texte
+"""
+def xp_bar(state,max):
+	pourcentage = int(100*(state/max))
+	n = pourcentage//5
+	result = "["
+	for i in range(20):
+		if i<n:
+			result += "█"
+		else : 
+			result += "_"
+	result += "]"
+	return result
