@@ -156,3 +156,26 @@ def where_send_xp_mess(user,lisRole) :
 		if functions_cores.in_list(user.role, lisRole[i]):
 			res = i
 	return res
+
+"""
+Fonction prenannt l'entré du dictionnaire des XPs corespondant à un joueur et renvoie une jauge exprimant les niveau du joueur
+"""
+def level_bar(a): #5*(level*level)+50*level+100
+	(level, xp, nmbmess, vochours) = a
+	xpsupp = 5*(level*level)+50*level+100
+	x = int(100*(xp/xpsupp))
+	text_value = "["
+	for i in range(20):
+		if i < x//5:
+			text_value += "$"
+		else:
+			text_value += "_"
+	text_value += "]"
+	return text_value
+
+"""
+Fonction renvoyant le texte à envoyer lors d'une commande pour connaitre sont niveau
+"""
+def level_messages():
+	pass
+
