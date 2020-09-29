@@ -22,7 +22,7 @@ async def on_ready():
     global adminOnly
     adminOnly = guild.get_channel(Data.admin_channel)
 
-    global parents_channel
+    """global parents_channel
     parents_channel = guild.get_channel(Data.parents_channel)
 
     global new_channel
@@ -45,7 +45,7 @@ async def on_ready():
     new_role[2] = guild.get_role(Data.new_role[2])
 
     if Data.launch_message :
-        await adminOnly.send("Bonjour ! Je viens de me lancer.")
+        await adminOnly.send("Bonjour ! Je viens de me lancer.")"""
 
 @client.event #Define call from channels
 async def on_message(text):
@@ -55,7 +55,7 @@ async def on_message(text):
             image   = text.attachments
             mess    = text.content
             mess    = mess.replace("!addpnj ", '')
-            delay   = float(10)
+            delay   = float(5)
             infomsg = None
             if functions_cores.in_list(await text.channel.webhooks(), mess, f=(lambda x:x.name)):
                 await text.channel.send("(Oups, un·e PnJ porte déjà ce nom !)")
@@ -72,12 +72,12 @@ async def on_message(text):
                     infomsg = await text.channel.send("(Oups, je n'ai pas pus créer le·la pnj !)")
             await text.delete(delay=delay)
             if infomsg != None:
-                await infomsg.delete(float(5))
+                await infomsg.delete(delay=float(5))
 
         if str.find(text.content.lower(), '!talkas ') == 0:
             mess    = text.content
             mess    = mess.replace("!talkas ", '')
-            delay   = float(30)
+            delay   = float(15)
             infomsg = None
             if mess[0] == '"':
                 mess = mess.replace('"','',1)
@@ -98,7 +98,7 @@ async def on_message(text):
                 infomsg = await text.channel.send("(Oups, la syntaxe est mauvaise)")
             await text.delete(delay=delay)
             if infomsg != None:
-                await infomsg.delete(float(5))
+                await infomsg.delete(delay=float(5))
 
         if str.find(text.content.lower(), "!pnjhere") == 0:
             webhooks = await text.channel.webhooks()
