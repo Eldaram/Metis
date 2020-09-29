@@ -52,10 +52,11 @@ async def on_message(text):
     #add exps 5*(n**2)+50*n+100
     if Data.webhook_profile and text.channel.type != discord.ChannelType.private and text.channel.category_id != Data.admin_category and text.channel.category_id != Data.new_category and text.channel.category_id != Data.HRP_category and text.channel.category_id != Data.DMAS_category : #fonctions liee aux webhooks
         if str.find(text.content.lower(), "!addpnj ") == 0: #create a webhook
-            image = text.attachments
-            mess  = text.content
-            mess  = mess.replace("!addpnj ", '')
-            delay = float(10)
+            image   = text.attachments
+            mess    = text.content
+            mess    = mess.replace("!addpnj ", '')
+            delay   = float(10)
+            infomsg = None
             if functions_cores.in_list(await text.channel.webhooks(), mess, f=(lambda x:x.name)):
                 await text.channel.send("(Oups, un·e PnJ porte déjà ce nom !)")
             else :
@@ -68,31 +69,36 @@ async def on_message(text):
                     await text.channel.create_webhook(name=mess, avatar=image, reason=reason_by)
                     delay = None
                 else :
-                    await text.channel.send("(Oups, je n'ai pas pus créer le·la pnj !)")
+                    infomsg = await text.channel.send("(Oups, je n'ai pas pus créer le·la pnj !)")
             await text.delete(delay=delay)
+            if infomsg != None:
+                await infomsg.delete(float(5))
 
         if str.find(text.content.lower(), '!talkas ') == 0:
-            mess  = text.content
-            mess  = mess.replace("!talkas ", '')
+            mess    = text.content
+            mess    = mess.replace("!talkas ", '')
+            delay   = float(30)
+            infomsg = None
             if mess[0] == '"':
                 mess = mess.replace('"','',1)
                 mess  = mess.split('" ',1)
-                delay = float(30)
                 if len(mess) == 2:
                     webhooks = await text.channel.webhooks()
                     place = functions_cores.in_list(webhooks, mess[0], f=(lambda x:x.name),place=True)
                     if place != -1:
                         if not functions_cores.webhook_request(webhooks[place].url,mess[1]) :
-                            await text.channel.send("(Oups, une erreur inconnue s'est produite ! Parle en tout de suite aux admins qu'ils aillent voire ce qui ne va pas !)")
+                            infomsg = await text.channel.send("(Oups, une erreur inconnue s'est produite ! Parle en tout de suite aux admins qu'ils aillent voire ce qui ne va pas !)")
                         else :
                             delay = None
                     else:
-                        await text.channel.send("(Aucun·e PnJ porte ce nom sur ce salon)")
+                        infomsg = await text.channel.send("(Aucun·e PnJ porte ce nom sur ce salon)")
                 else:
-                    await text.channel.send("(Oups, la syntaxe est mauvaise)")
+                    infomsg = await text.channel.send("(Oups, la syntaxe est mauvaise)")
             else:
-                await text.channel.send("(Oups, la syntaxe est mauvaise)")
+                infomsg = await text.channel.send("(Oups, la syntaxe est mauvaise)")
             await text.delete(delay=delay)
+            if infomsg != None:
+                await infomsg.delete(float(5))
 
         if str.find(text.content.lower(), "!pnjhere") == 0:
             webhooks = await text.channel.webhooks()
