@@ -22,7 +22,7 @@ async def on_ready():
     global adminOnly
     adminOnly = guild.get_channel(Data.admin_channel)
 
-    """global parents_channel
+    global parents_channel
     parents_channel = guild.get_channel(Data.parents_channel)
 
     global new_channel
@@ -45,7 +45,7 @@ async def on_ready():
     new_role[2] = guild.get_role(Data.new_role[2])
 
     if Data.launch_message :
-        await adminOnly.send("Bonjour ! Je viens de me lancer.")"""
+        await adminOnly.send("Bonjour ! Je viens de me lancer.")
 
 @client.event #Define call from channels
 async def on_message(text):
