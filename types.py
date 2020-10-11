@@ -17,6 +17,15 @@ class XP_list:
 		else:
 			return -1
 
+	def search_for_player(id_discord):
+		i = 0
+		while i < len(self.liste) and self.liste[i].id_discord != id_discord:
+			i += 1
+		if i < len(self.liste):
+			return self.liste[i]
+		else:
+			return Player_XP(None)
+
 	def return_in_place():
 		return self.liste
 
@@ -34,9 +43,6 @@ class XP_list:
 		if i != 0 and self.liste[i].is_more_than(self.liste[i-1]):
 			(self.liste[i],self.liste[i-1]) = (self.liste[i-1], self.liste[i])
 		return up
-		
-		 
-
 
 class Player_XP:
 	"""docstring for Player_XP"""
@@ -75,3 +81,5 @@ class Player_XP:
 		else :
 			return False
 		
+	def xps_lefts():
+		return 5*(self.level*self.level)+50*self.level+100 - self.xp

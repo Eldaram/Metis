@@ -58,12 +58,12 @@ async def on_ready():
             for i in range(len(voice_chan)):
                 if voice_chan[i].id != Data.afk and len(voice_chan[i].members) > 1 : #ne pas oublier de ne pas compter les bots
                     for y in range(len(voice_chan[i].members)):
-                        (levels,up) = functions_cores.epxs_supp(levels,voice_chan[i].members[y].id,vocal=True)
+                        up = levels.add_to_player(voice_chan[i].members[y].id,False)
                         if up:
                             if functions_cores.in_list(voice_chan[i].members[y].roles , member) :
-                                await gen_channel.send("**Bravo  " + voice_chan[i].members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + levels[voice_chan[i].members[y].id][0] + " !**")
+                                await gen_channel.send("**Bravo  " + voice_chan[i].members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(voice_chan[i].members[y].id)-1].level) + " !**")
                             else :
-                                await new_channel[where_send_xp_mess(voice_chan[i].members[y],new_role)].send("**Bravo  " + voice_chan[i].members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + levels[voice_chan[i].members[y].id][0] + " !**")
+                                await new_channel[where_send_xp_mess(voice_chan[i].members[y],new_role)].send("**Bravo  " + voice_chan[i].members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(voice_chan[i].members[y].id)-1].level) + " !**")
             functions_cores.save_levels(levels)
             
 
@@ -73,14 +73,23 @@ async def on_message(text):
     #add exps 5*(n**2)+50*n+100
     if Data.XPs_modules and text.channel.type != discord.ChannelType.private and not functions_cores.in_list(Data.not_xp_channels, text.channel.id) and not str.find(text.content.lower(), "!roll") == 0 :
         if str.find(text.content.lower(), "!levels") == 0:
-            pass
+            s = "```css \n[" + str(levels.search_for_place(text.author.id)-1) + "]\n#" + text.author.display_name + "est niveau " + str(levels.search_for_player(text.author.id).level) + "\n" + functions_cores.level_bar(levels.search_for_player(text.author.id)) + "\nXps_restants " + str(levels.search_for_player(text.author.id).xps_lefts()) + "\n```"
+            await text.channel.send(s)
+        elif str.find(text.content.lower(), "!ranking") == 0:
+            s = "```css\nCLASSEMENT DE RU :"
+            i = 1
+            for C in levels.return_in_place():
+                s+= "#" + str(i) + " " + text.channel.guild.get_member(C.discord_id).display_name + " est niveau " + str(C.level) + " / xp : " + str(C.xp) + '\n'
+                i += 1
+            s += "```"
+            await text.channel.send(s)
         else:
-            (levels,up) = functions_cores.epxs_supp(levels,text.author.id)
+            up = levels.add_to_player(voice_chan[i].members[y].id,False)
             if up:
                 if functions_cores.in_list(text.author.roles , member) :
-                    await gen_channel.send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + levels[text.author.id][0] + " !**")
+                    await gen_channel.send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(text.author.id)-1].level) + " !**")
                 else :
-                    await new_channel[where_send_xp_mess(text.author,new_role)].send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + levels[text.author.id][0] + " !**")
+                    await new_channel[where_send_xp_mess(text.author,new_role)].send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(text.author.id)-1].level) + " !**")
     if Data.webhook_profile and text.channel.type != discord.ChannelType.private and text.channel.category_id != Data.admin_category and text.channel.category_id != Data.new_category and text.channel.category_id != Data.HRP_category and text.channel.category_id != Data.DMAS_category : #fonctions liee aux webhooks
         if str.find(text.content.lower(), "!addpnj ") == 0: #create a webhook
             image = text.attachments
