@@ -9,6 +9,7 @@ from urllib.error import HTTPError
 
 import Data
 import functions_cores
+import types
 
 client = discord.Client() #Create the client link
 

@@ -2,6 +2,7 @@ import json
 from urllib import request
 from urllib.error import HTTPError
 from random import *
+import types
 
 def Test_token(secretToken):
  	return len(secretToken) == 59
