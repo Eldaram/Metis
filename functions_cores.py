@@ -89,48 +89,6 @@ def webhook_request(url, content):
 	    return False
 
 """
-epxs_supp permet d'ajouter de l'xp dans une bibliothèque
-library représente les xps et le niveau des joueurs liée à une clé qui est leurs ID unique discord
-key est l'ID spécifique du membre a qui on veut ajouter de l'XP
-
-la valeur de sortie est library modifié
-
-library = {IDJOUEUR : (XP,niveau, nombre de message, temps en vocal)}
-"""
-def epxs_supp(library,key,vocal=False):
-	exist = False
-	for i in library:
-		if key == i:
-			exist = True
-	if not exist:
-		library[key] = (0,0,0,0)
-	(library[key],up) = player_win_xp(library[key],vocal)
-	return (library,up)
-
-"""
-Cette fonction fait augmente les xps avec un nombre aléatoire compris entre 15 et 25
-Si les XPs totaux dépssent 5*(n*n)+50*n+100 avec n le niveau actuel, alors le niveau monte de 1 et on retirel'ancien total à xp
-
-a = (level, xp, nmbmess, vochours) <- (int,int,int,int)
-(level, xp, nmbmess, vochours) -> (int,int,int,int)
-"""
-def player_win_xp(a, vocal):
-	(level, xp, nmbmess, vochours) = a
-	up = False
-	if vocal:
-		xpsupp = 10
-		vochours += 1
-	else :
-		xpsupp = randint(15,25)
-		nmbmess += 1
-	xp += xpsupp
-	if xp >= 5*(level*level)+50*level+100:
-		xp -= 5*(level*level)+50*level+100
-		level += 1
-		up = True
-	return ((level, xp, nmbmess, vochours),up)
-
-"""
 Fonction qui sauvegarde les niveaux
 """
 def save_levels(dictionary):
@@ -160,10 +118,9 @@ def where_send_xp_mess(user,lisRole) :
 """
 Fonction prenannt l'entré du dictionnaire des XPs corespondant à un joueur et renvoie une jauge exprimant les niveau du joueur
 """
-def level_bar(a): #5*(level*level)+50*level+100
-	(level, xp, nmbmess, vochours) = a
-	xpsupp = 5*(level*level)+50*level+100
-	x = int(100*(xp/xpsupp))
+def level_bar(PXP): #5*(level*level)+50*level+100
+	xpsupp = 5*(PXP.level*PXP.level)+50*PXP.level+100
+	x = int(100*(PXP.xp/xpsupp))
 	text_value = "["
 	for i in range(20):
 		if i < x//5:
@@ -172,10 +129,3 @@ def level_bar(a): #5*(level*level)+50*level+100
 			text_value += "_"
 	text_value += "]"
 	return text_value
-
-"""
-Fonction renvoyant le texte à envoyer lors d'une commande pour connaitre sont niveau
-"""
-def level_messages():
-	pass
-
