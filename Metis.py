@@ -9,7 +9,7 @@ from urllib.error import HTTPError
 
 import Data
 import functions_cores
-import types
+import Types_for_metis
 
 client = discord.Client() #Create the client link
 
@@ -57,14 +57,15 @@ async def on_ready():
             await asyncio.sleep(60)
             voice_chan = guild.voice_channels
             for i in range(len(voice_chan)):
-                if voice_chan[i].id != Data.afk and len(voice_chan[i].members) > 1 : #ne pas oublier de ne pas compter les bots
-                    for y in range(len(voice_chan[i].members)):
-                        up = levels.add_to_player(voice_chan[i].members[y].id,False)
+                voice_members = functions_cores.vocalmembers_wnobots(voice_chan[i].members)
+                if voice_chan[i].id != Data.afk and (len(voice_members)) > 0 : #ne pas oublier de ne pas compter les bots
+                    for y in range(len(voice_members)):
+                        up = levels.add_to_player(voice_members[y].id,False)
                         if up:
-                            if functions_cores.in_list(voice_chan[i].members[y].roles , member) :
-                                await gen_channel.send("**Bravo  " + voice_chan[i].members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(voice_chan[i].members[y].id)-1].level) + " !**")
+                            if functions_cores.in_list(voice_members[y].roles , member) :
+                                await gen_channel.send("**Bravo  " + voice_members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(voice_members[y].id)-1].level) + " !**")
                             else :
-                                await new_channel[where_send_xp_mess(voice_chan[i].members[y],new_role)].send("**Bravo  " + voice_chan[i].members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(voice_chan[i].members[y].id)-1].level) + " !**")
+                                await new_channel[where_send_xp_mess(voice_members[y],new_role)].send("**Bravo  " + voice_members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(voice_members[y].id)-1].level) + " !**")
             functions_cores.save_levels(levels)
             
 
@@ -74,18 +75,19 @@ async def on_message(text):
     #add exps 5*(n**2)+50*n+100
     if Data.XPs_modules and text.channel.type != discord.ChannelType.private and not functions_cores.in_list(Data.not_xp_channels, text.channel.id) and not str.find(text.content.lower(), "!roll") == 0 :
         if str.find(text.content.lower(), "!levels") == 0:
-            s = "```css \n[" + str(levels.search_for_place(text.author.id)-1) + "]\n#" + text.author.display_name + "est niveau " + str(levels.search_for_player(text.author.id).level) + "\n" + functions_cores.level_bar(levels.search_for_player(text.author.id)) + "\nXps_restants " + str(levels.search_for_player(text.author.id).xps_lefts()) + "\n```"
+            Member_xp = levels.search_for_player(text.author.id)
+            s = "```css\n[" + str(levels.search_for_place(text.author.id)-1) + "]\n#" + text.author.display_name + " est niveau " + str(Member_xp.level) + "\n" + functions_cores.level_bar(Member_xp) + "\nXps_restants " + str(Member_xp.xps_lefts()) + "\n" + "msg : " + str(Member_xp.nmbmess) + " / tmp en vocal : " + str(Member_xp.voctime) + "\n```"
             await text.channel.send(s)
         elif str.find(text.content.lower(), "!ranking") == 0:
-            s = "```css\nCLASSEMENT DE RU :"
+            s = "```css\nCLASSEMENT DE RU :\n"
             i = 1
             for C in levels.return_in_place():
-                s+= "#" + str(i) + " " + text.channel.guild.get_member(C.discord_id).display_name + " est niveau " + str(C.level) + " / xp : " + str(C.xp) + '\n'
+                s+= "#" + str(i) + " " + text.channel.guild.get_member(C.id_discord).display_name + " est niveau " + str(C.level) + " / xp : " + str(C.xp) + " / msg : " + str(C.nmbmess) + " / tmp en vocal : " + str(C.voctime) + '\n'
                 i += 1
             s += "```"
             await text.channel.send(s)
         else:
-            up = levels.add_to_player(voice_chan[i].members[y].id,False)
+            up = levels.add_to_player(text.author.id,True)
             if up:
                 if functions_cores.in_list(text.author.roles , member) :
                     await gen_channel.send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(text.author.id)-1].level) + " !**")

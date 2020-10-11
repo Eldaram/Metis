@@ -2,7 +2,9 @@ import json
 from urllib import request
 from urllib.error import HTTPError
 from random import *
-import types
+import pickle
+
+import Types_for_metis
 
 def Test_token(secretToken):
  	return len(secretToken) == 59
@@ -130,3 +132,13 @@ def level_bar(PXP): #5*(level*level)+50*level+100
 			text_value += "_"
 	text_value += "]"
 	return text_value
+
+"""
+Renvoie une liste de tous les membres dans un vocal SANS les bots
+"""
+def vocalmembers_wnobots(liste):
+	liste = []
+	for e in liste:
+		if not e.bot:
+			liste.append(e)
+	return liste
