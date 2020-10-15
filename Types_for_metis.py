@@ -59,6 +59,7 @@ class Player_XP:
 		up = False
 		self.nmbmess += 1
 		if time.year > self.lastmsg.year or time.month > self.lastmsg.month or time.day > self.lastmsg.day or time.hour > self.lastmsg.hour or time.minute > self.lastmsg.minute:
+			self.lastmsg = time
 			self.xp += randint(15,25)
 			if self.xp >= 5*(self.level*self.level)+50*self.level+100:
 				self.xp -= 5*(self.level*self.level)+50*self.level+100

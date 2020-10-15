@@ -136,9 +136,9 @@ def level_bar(PXP): #5*(level*level)+50*level+100
 """
 Renvoie une liste de tous les membres dans un vocal SANS les bots
 """
-def vocalmembers_wnobots(liste):
+def vocalmembers_wnobots(liste_vocal):
 	liste = []
-	for e in liste:
+	for e in liste_vocal:
 		if not e.bot:
 			liste.append(e)
 	return liste

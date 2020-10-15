@@ -1,4 +1,4 @@
-secret_token = 
+secret_token = ""
 
 #GUILDS
 main_guild = 
