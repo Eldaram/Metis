@@ -58,7 +58,7 @@ async def on_ready():
             voice_chan = guild.voice_channels
             for i in range(len(voice_chan)):
                 voice_members = functions_cores.vocalmembers_wnobots(voice_chan[i].members)
-                if voice_chan[i].id != Data.afk and (len(voice_members)) > 0 : #ne pas oublier de ne pas compter les bots
+                if voice_chan[i].id != Data.afk and (len(voice_members)) > 1 : 
                     for y in range(len(voice_members)):
                         up = levels.add_to_player(voice_members[y].id,False,None)
                         if up:
