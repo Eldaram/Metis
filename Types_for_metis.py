@@ -72,7 +72,6 @@ class Player_XP:
 		self.voctime += 1
 		self.xp += 10
 		if self.xp >= 5*(self.level*self.level)+50*self.level+100:
-			self.xp -= 5*(self.level*self.level)+50*self.level+100
 			self.level += 1
 			up = True
 		return up
