@@ -54,19 +54,10 @@ async def on_ready():
         global levels
         levels = functions_cores.open_levels()
         while True:
-            await asyncio.sleep(60)
-            voice_chan = guild.voice_channels
-            for i in range(len(voice_chan)):
-                voice_members = functions_cores.vocalmembers_wnobots(voice_chan[i].members)
-                if voice_chan[i].id != Data.afk and (len(voice_members)) > 1 : 
-                    for y in range(len(voice_members)):
-                        up = levels.add_to_player(voice_members[y].id,False,None)
-                        if up:
-                            if functions_cores.in_list(voice_members[y].roles , member) :
-                                await gen_channel.send("**Bravo  " + voice_members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(voice_members[y].id)-1].level) + " !**")
-                            else :
-                                await new_channel[where_send_xp_mess(voice_members[y],new_role)].send("**Bravo  " + voice_members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(voice_members[y].id)-1].level) + " !**")
-            functions_cores.save_levels(levels)
+            try:
+                functions_cores.vocal_xps(levels,guild,gen_channel,new_channel)
+            except Exception as e:
+                print(e)
             
 
 
