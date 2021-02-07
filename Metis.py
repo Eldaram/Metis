@@ -59,7 +59,17 @@ async def on_ready():
             except Exception as e:
                 print(e)
             
+@client.event 
+async def on_raw_reaction_add(payload):
+    if data.self_role_mod and (payload.message_id in self_role_dict):
+        if (payload.emoji in self_role_dict[payload.message_id]):
+            await payload.member.add_roles(self_role_dict[payload.message_id][payload.emoji])
 
+@client.event 
+async def on_raw_reaction_remove(payload):
+    if data.self_role_mod and (payload.message_id in self_role_dict):
+        if (payload.emoji in self_role_dict[payload.message_id]):
+            await (guild.get_member(payload.user_id)).remove_roles(self_role_dict[payload.message_id][payload.emoji])
 
 @client.event #Define call from channels
 async def on_message(text):
