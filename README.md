@@ -21,3 +21,5 @@ You can activate or disable functionalities in Data. (check out boleans)
 Thanks to discord.py ---> https://github.com/Rapptz/discord.py
 
 (Go check it to have more informations and please Star their incredible work !)
+
+I used a "core" library forme Metis --> https://github.com/Eldaram/python-command-reader, realy easy to use and realy help with Metis command.

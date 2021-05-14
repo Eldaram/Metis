@@ -74,6 +74,7 @@ async def on_raw_reaction_remove(payload):
 @client.event #Define call from channels
 async def on_message(text):
     #add exps 5*(n**2)+50*n+100
+    
     if Data.XPs_modules and text.channel.type != discord.ChannelType.private and not functions_cores.in_list(Data.not_xp_channels, text.channel.id) and not str.find(text.content.lower(), "!roll") == 0 and not text.author.bot :
         if str.find(text.content.lower(), "!levels") == 0:
             Member_xp = levels.search_for_player(text.author.id)

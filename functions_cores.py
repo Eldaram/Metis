@@ -162,3 +162,18 @@ def vocal_xps(levels,guild,gen_channel,new_channel):
 	            else :
 	                await new_channel[where_send_xp_mess(voice_members[y],new_role)].send("**Bravo  " + voice_members[y].mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(voice_members[y].id)-1].level) + " !**")
 	save_levels(levels)
+
+"""
+Fonction d'affichage du niveau d'un joueur
+name     : "!levels"
+args_min : 0
+is_text  : 0
+"""
+def __levels(must_arg_list, followed_arg_list, msg_discord):
+    Member_xp = levels.search_for_player(msg_discord.author.id)
+    s = "```css\n[" + str(levels.search_for_place(msg_discord.author.id)-1) + "]\n#" + msg_discord.author.display_name + " est niveau " + str(Member_xp.level) + "\n" + functions_cores.level_bar(Member_xp) + "\nXps_restants " + str(Member_xp.xps_lefts()) + "\n" + "msg : " + str(Member_xp.nmbmess) + " / tmp en vocal : " + str(Member_xp.voctime) + "\n```"
+    return s
+
+"""
+Fonction d'affichage du classement
+"""
