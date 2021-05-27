@@ -6,6 +6,7 @@ class Reader(object):
         self.not_in_cmds = ""
         self.not_enougth_arg = ""
         self.not_in_private = ""
+        self.forbidden_channel = ""
         
     """
     It read a string command and execute it, if it returns somthing, it will return it AND print it
@@ -20,6 +21,8 @@ class Reader(object):
             args_supp = sliced_str[self.cmds[sliced_str[0]][1]+1:]
             if not self.cmds[sliced_str[0]][3] and text.channel.type == discord.ChannelType.private:
                 return self.not_in_private
+            if msg_discord.channel.category_id in self.cmds[sliced_str[0]][5] or msg_discord.channel.category_id in self.cmds[sliced_str[0]][4] :
+                return self.forbidden_channel
             if len(args_need) < self.cmds[sliced_str[0]][1]:
                 return self.not_enougth_arg
             if not self.cmds[sliced_str[0]][2]:
@@ -30,10 +33,10 @@ class Reader(object):
                     txt += " " + x
                 return self.cmds[sliced_str[0]][0](args_need,txt[1:],msg_discord,levels)
         elif self.not_in_cmds != "":
-            print(self.not_in_cmds)
+            #print(self.not_in_cmds)
             return self.not_in_cmds
         else :
-            print("This is not a command.")
+            #print("This is not a command.")
             return "This is not a command."
 
     """
@@ -42,11 +45,11 @@ class Reader(object):
     cmd([must_arg_list], followed_string OR [followed_arg_list],msg_discord,levels)
     func is a function / args_min is a number / is_text is a boolean
     """
-    def add_cmds(self, name, func, args_min, is_text, can_private):
+    def add_cmds(self, name, func, args_min, is_text, can_private, forbidden_channel, forbidden_catergory):
         if " " in name:
             print("Error Reader.add_cmds, name should not contain spaces")
         else :
-            self.cmds[name] = (func,args_min,is_text, can_private)
+            self.cmds[name] = (func,args_min,is_text, can_private, forbidden_channel, forbidden_catergory)
 
 
 """

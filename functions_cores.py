@@ -168,6 +168,8 @@ Fonction d'affichage du niveau d'un joueur
 name     : "!levels"
 args_min : 0
 is_text  : 0
+forbidden_channel   : []
+forbidden_catergory : []
 """
 def __levels(must_arg_list, followed_arg_list, msg_discord, levels):
     Member_xp = levels.search_for_player(msg_discord.author.id)
@@ -179,6 +181,8 @@ Fonction d'affichage du classement
 name     : "!ranking"
 args_min : 0
 is_text  : 0
+forbidden_channel   : []
+forbidden_catergory : []
 """
 def __ranking(must_arg_list, followed_arg_list, msg_discord, levels):
     s = "```css\nCLASSEMENT DE RU :\n"
@@ -188,4 +192,48 @@ def __ranking(must_arg_list, followed_arg_list, msg_discord, levels):
         i += 1
     s += "```"
     return s
-    
+
+"""
+Fonction de lancer de dès
+name     : "!roll"
+args_min : 0
+is_text  : 1
+forbidden_channel   : []
+forbidden_catergory : []
+"""
+
+def __dice_roll(must_arg_list, followed_text, msg_discord, levels):
+    followed_text = followed_text+' '
+    try :
+        details = "Détails : "
+        while "d" in followed_text :
+            place = followed_text.find("d")
+            placeB = place + 0
+            nmbDice = ''
+            while followed_text[placeB-1] in "1234567890" and placeB-1 >= 0:
+                placeB = placeB - 1
+                nmbDice = followed_text[placeB] + nmbDice
+            nmbDice = int(nmbDice)
+            placeA = place + 0
+            dice = ''
+            while followed_text[placeA+1] in "1234567890" and placeA+1 < len(followed_text)-1:
+                placeA = placeA + 1
+                dice = dice + followed_text[placeA]
+            dice = int(dice)
+            details += "\n" + str(nmbDice) +"d" + str(dice) +" : "
+            total = 0
+            for i in range(nmbDice):
+                if i != 0:
+                    details += " "
+                y = randint(1,dice)
+                total += y
+                details += str(y)
+            details += " (" + str(total) + ")"
+            followed_text = followed_text.replace(str(nmbDice) +"d"+ str(dice), str(total), 1)
+        result = eval(followed_text)
+        chaine = "```Markdown\n#{0}\n{1}\n```".format(result,details)
+        return chaine
+    except ZeroDivisionError :
+        return "Il y a eu une division par 0... Je ne peut donc pas faire de résultat réel !"
+    except :
+        return "La syntaxe n'est pas correcte... Il faut l'écrire \"!roll 1d20 +3\" par exemple."

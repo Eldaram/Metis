@@ -135,45 +135,7 @@ async def on_message(text):
             await text.author.dm_channel.send(texte)
             await text.delete(delay=None)
     #DICE FUNCIONS
-    if text.content[0] == "!" and Data.dice_module:
-        mess = text.content + " "
-        if str.find(text.content, "roll") == 1: #Function for dices
-            mess = mess.replace(' ', '')
-            mess = mess.replace('!roll', '')
-            mess = mess+' '
-            try :
-                details = "Détails : "
-                while "d" in mess :
-                    place = mess.find("d")
-                    placeB = place + 0
-                    nmbDice = ''
-                    while mess[placeB-1] in "1234567890" and placeB-1 >= 0:
-                        placeB = placeB - 1
-                        nmbDice = mess[placeB] + nmbDice
-                    nmbDice = int(nmbDice)
-                    placeA = place + 0
-                    dice = ''
-                    while mess[placeA+1] in "1234567890" and placeA+1 < len(mess)-1:
-                        placeA = placeA + 1
-                        dice = dice + mess[placeA]
-                    dice = int(dice)
-                    details += "\n" + str(nmbDice) +"d" + str(dice) +" : "
-                    total = 0
-                    for i in range(nmbDice):
-                        if i != 0:
-                            details += " "
-                        y = randint(1,dice)
-                        total += y
-                        details += str(y)
-                    details += " (" + str(total) + ")"
-                    mess = mess.replace(str(nmbDice) +"d"+ str(dice), str(total), 1)
-                result = eval(mess)
-                chaine = "```Markdown\n#{0}\n{1}\n```".format(result,details)
-                await text.channel.send(chaine)
-            except ZeroDivisionError :
-                await text.channel.send("Il y a eu une division par 0... Je ne peut donc pas faire de résultat réel !")
-            except :
-                await text.channel.send("La syntaxe n'est pas correcte... Il faut l'écrire \"!roll 1d20 +3\" par exemple.")
+    
 
     elif Data.to_admin_message and text.channel.type == discord.ChannelType.private and not text.author.bot: #function for "send to amdin"
         textToSend = text.author.name + ' a dit : "' + text.content + '"'

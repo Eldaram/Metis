@@ -17,7 +17,7 @@ afk =
 admin_category = 
 new_category   = 
 HRP_category   = 
-DMAS_category  = 
+DMAS_category  = #Draw me a sheep
 
 #ROLES
 membre   = 
