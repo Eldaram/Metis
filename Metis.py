@@ -76,25 +76,12 @@ async def on_message(text):
     #add exps 5*(n**2)+50*n+100
     
     if Data.XPs_modules and text.channel.type != discord.ChannelType.private and not functions_cores.in_list(Data.not_xp_channels, text.channel.id) and not str.find(text.content.lower(), "!roll") == 0 and not text.author.bot :
-        if str.find(text.content.lower(), "!levels") == 0:
-            Member_xp = levels.search_for_player(text.author.id)
-            s = "```css\n[" + str(levels.search_for_place(text.author.id)-1) + "]\n#" + text.author.display_name + " est niveau " + str(Member_xp.level) + "\n" + functions_cores.level_bar(Member_xp) + "\nXps_restants " + str(Member_xp.xps_lefts()) + "\n" + "msg : " + str(Member_xp.nmbmess) + " / tmp en vocal : " + str(Member_xp.voctime) + "\n```"
-            await text.channel.send(s)
-        elif str.find(text.content.lower(), "!ranking") == 0:
-            s = "```css\nCLASSEMENT DE RU :\n"
-            i = 1
-            for C in levels.return_in_place():
-                s+= "#" + str(i) + " " + text.channel.guild.get_member(C.id_discord).display_name + " est niveau " + str(C.level) + " / xp : " + str(C.xp) + " / msg : " + str(C.nmbmess) + " / tmp en vocal : " + str(C.voctime) + '\n'
-                i += 1
-            s += "```"
-            await text.channel.send(s)
-        else:
-            up = levels.add_to_player(text.author.id,True,text.created_at)
-            if up:
-                if functions_cores.in_list(text.author.roles , member) :
-                    await gen_channel.send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(text.author.id)-1].level) + " !**")
-                else :
-                    await new_channel[where_send_xp_mess(text.author,new_role)].send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(text.author.id)-1].level) + " !**")
+        up = levels.add_to_player(text.author.id,True,text.created_at)
+        if up:
+            if functions_cores.in_list(text.author.roles , member) :
+                await gen_channel.send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(text.author.id)-1].level) + " !**")
+            else :
+                await new_channel[where_send_xp_mess(text.author,new_role)].send("**Bravo  " + text.author.mention + " tu viens de monter de 1 niveau, tu es donc niveau " + str(levels.return_in_place()[levels.search_for_place(text.author.id)-1].level) + " !**")
     if Data.webhook_profile and text.channel.type != discord.ChannelType.private and text.channel.category_id != Data.admin_category and text.channel.category_id != Data.new_category and text.channel.category_id != Data.HRP_category and text.channel.category_id != Data.DMAS_category : #fonctions liee aux webhooks
         if str.find(text.content.lower(), "!addpnj ") == 0: #create a webhook
             image = text.attachments

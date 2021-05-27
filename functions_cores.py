@@ -169,11 +169,23 @@ name     : "!levels"
 args_min : 0
 is_text  : 0
 """
-def __levels(must_arg_list, followed_arg_list, msg_discord):
+def __levels(must_arg_list, followed_arg_list, msg_discord, levels):
     Member_xp = levels.search_for_player(msg_discord.author.id)
     s = "```css\n[" + str(levels.search_for_place(msg_discord.author.id)-1) + "]\n#" + msg_discord.author.display_name + " est niveau " + str(Member_xp.level) + "\n" + functions_cores.level_bar(Member_xp) + "\nXps_restants " + str(Member_xp.xps_lefts()) + "\n" + "msg : " + str(Member_xp.nmbmess) + " / tmp en vocal : " + str(Member_xp.voctime) + "\n```"
     return s
 
 """
 Fonction d'affichage du classement
+name     : "!ranking"
+args_min : 0
+is_text  : 0
 """
+def __ranking(must_arg_list, followed_arg_list, msg_discord, levels):
+    s = "```css\nCLASSEMENT DE RU :\n"
+    i = 1
+    for C in levels.return_in_place():
+        s+= "#" + str(i) + " " + text.channel.guild.get_member(C.id_discord).display_name + " est niveau " + str(C.level) + " / xp : " + str(C.xp) + " / msg : " + str(C.nmbmess) + " / tmp en vocal : " + str(C.voctime) + '\n'
+        i += 1
+    s += "```"
+    return s
+    
